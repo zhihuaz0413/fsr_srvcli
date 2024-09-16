@@ -14,14 +14,11 @@ class Recorder:
         self.fsrmsg = FSRmsg_pb2.FSRMsg()
         self.filename = filename
 
-    def callback(self, values, dt):
-        # print("dt = {}".format(dt[0]))
-        # print("values = {}".format(values))
-        # for i in range(16):
-        #     print(values[i*16:(i+1)*16])
+    def callback(self, acc, fsr, dt):
         fsrdata = FSRmsg_pb2.FSRData()
         fsrdata.timestamp = str(dt[0])
-        fsrdata.value = ' '.join(map(str, values))
+        fsrdata.fsr = ' '.join(map(str, fsr.flatten().tolist()))
+        fsrdata.acc = ' '.join(map(str, acc.flatten().tolist()))
         #print(fsrdata.__str__())
         self.fsrmsg.fsr_data.append(fsrdata)
 

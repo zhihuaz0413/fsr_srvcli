@@ -3,8 +3,9 @@ syntax = "proto3";
 package pyFSRray;
 
 message FSRData {
-  string value = 1;
-  string timestamp = 2;
+  string fsr = 1;
+  string acc = 2;
+  string timestamp = 3;
 };
 
 message FSRMsg {

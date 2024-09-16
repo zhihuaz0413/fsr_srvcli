@@ -1,6 +1,7 @@
 import sys
 
 from fsr_interfaces.srv import Trigger
+from fsr_interfaces.srv import StopSig
 import rclpy
 from rclpy.node import Node
 
@@ -8,6 +9,7 @@ class FsrClientAsync(Node):
     def __init__(self):
         super().__init__('fsr_client_async')
         self.cli = self.create_client(Trigger, 'trigger_recorder')
+        #self.srv = self.create_service(StopSig, 'stop_signal', self.test_callback)
         while not self.cli.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('service not available, waiting again...')
         self.req = Trigger.Request()
@@ -15,13 +17,17 @@ class FsrClientAsync(Node):
     def send_request(self):
         self.req.duration = 5
         self.req.show_flag = False
-        self.req.record_flag = False
+        self.req.record_flag = True
         self.req.folder = '/home/hrg/ws_moveit/data/'
-        self.req.labels = 'soft_black_c_1'
+        self.req.labels = 'test_1'
         self.future = self.cli.call_async(self.req)
         rclpy.spin_until_future_complete(self, self.future)
         return self.future.result()
 
+    def test_callback(self, request, response):
+        print('Value received', request.mean_val)
+        response.success = True
+        return response
 
 def main():
     rclpy.init()
